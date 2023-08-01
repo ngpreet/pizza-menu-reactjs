@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import { pizzaData } from "./data.js";
 
 function App() {
   return (
@@ -24,12 +25,11 @@ function Menu() {
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza
-        name="Pizza Margherita"
-        ingredients="Tomato and mozarella"
-        imageUrl="./pizzas/margherita.jpg"
-        price={10}
-      />
+      <ul className="pizzas">
+        {pizzaData.map((pizza) => {
+          return <Pizza pizzaObj={pizza} key={pizza.name} />;
+        })}
+      </ul>
     </main>
   );
 }
@@ -37,18 +37,34 @@ function Menu() {
 function Pizza(props) {
   return (
     <div className="pizza">
-      <img src={props.imageUrl} alt={props.name} />
+      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
       <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price}</span>
+        <h3>{props.pizzaObj.name}</h3>
+        <p>{props.pizzaObj.ingredients}</p>
+        <span>{props.pizzaObj.price}</span>
       </div>
     </div>
   );
 }
 
 function Footer() {
-  return <footer className="footer">We are currently open</footer>;
+  const hours = new Date().getHours();
+  const openHours = 10;
+  const closeHours = 22;
+  const isOpen = hours >= openHours && hours <= closeHours;
+
+  return (
+    <footer className="footer">
+      {isOpen && (
+        <div className="order">
+          <p>
+            We're open until {closeHours}:00. Come visit us or order online.
+          </p>
+          <button className="btn">Order</button>
+        </div>
+      )}
+    </footer>
+  );
 }
 
 const app = ReactDOM.createRoot(document.getElementById("root"));
