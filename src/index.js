@@ -25,23 +25,34 @@ function Menu() {
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <ul className="pizzas">
-        {pizzaData.map((pizza) => {
-          return <Pizza pizzaObj={pizza} key={pizza.name} />;
-        })}
-      </ul>
+
+      {pizzaData.length > 0 ? (
+        <React.Fragment>
+          <p>
+            Authentic Italian cuisine. 6 creative dishes to choose from. All
+            from our stone owen.
+          </p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => {
+              return <Pizza pizzaObj={pizza} key={pizza.name} />;
+            })}
+          </ul>
+        </React.Fragment>
+      ) : (
+        <p>We're working on our menu. Please come back later.</p>
+      )}
     </main>
   );
 }
 
-function Pizza(props) {
+function Pizza({ pizzaObj }) {
   return (
-    <div className="pizza">
-      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name} />
+    <div className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
       <div>
-        <h3>{props.pizzaObj.name}</h3>
-        <p>{props.pizzaObj.ingredients}</p>
-        <span>{props.pizzaObj.price}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
       </div>
     </div>
   );
@@ -55,15 +66,23 @@ function Footer() {
 
   return (
     <footer className="footer">
-      {isOpen && (
-        <div className="order">
-          <p>
-            We're open until {closeHours}:00. Come visit us or order online.
-          </p>
-          <button className="btn">Order</button>
-        </div>
+      {isOpen ? (
+        <Order closeHours={closeHours} />
+      ) : (
+        <p>
+          We're happy to welcome you between {openHours}:00 and {closeHours}:00
+        </p>
       )}
     </footer>
+  );
+}
+
+function Order({ closeHours }) {
+  return (
+    <div className="order">
+      <p>We're open until {closeHours}:00. Come visit us or order online.</p>
+      <button className="btn">Order</button>
+    </div>
   );
 }
 
